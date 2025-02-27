@@ -9,16 +9,16 @@ struct Arena {
     bool exitPortalActive;
     bool complete;
     bool exitActive;
-    int enemiesDefeated;  // Dodano polje
+    int enemiesDefeated;
+    int animalsRescued;
 };
 
-extern Arena arena;  // 🔹 Samo deklaracija
+extern Arena arena;
 
 void initArena(Arena &arena, int x, int y, int width, int height);
 void drawArena(SDL_Renderer* renderer, const Arena &arena);
 void updateArena(Arena &arena);
 void checkArenaCollision(Player &player, const Arena &arena);
-void drawExitPortal(SDL_Renderer* renderer, const Arena &arena);
-bool checkExitPortalCollision(const Player &player, const Arena &arena);
+void rescueAnimal(Arena &arena);
 
 #endif
