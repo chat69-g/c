@@ -3,30 +3,23 @@
 #include "arena.h"
 extern Arena arena;
 
-
 void initPortal(Portal &portal, int x, int y) {
     portal.x = x;
     portal.y = y;
     portal.size = 50;
     portal.active = true;
     portal.activationTime = 0;
-    portal.lastSpawnTime = 0; // Inicializiramo spremenljivko
-    portal.timer = 0;         // Inicializiramo spremenljivko
+    portal.lastSpawnTime = 0;
+    portal.timer = 0;
 }
 
 void updatePortal(Portal &portal, Uint32 currentTime) {
     if (!portal.active && (currentTime - portal.lastSpawnTime > 5000)) {
         portal.active = true;
         portal.lastSpawnTime = currentTime;
-        portal.timer = currentTime;  
-    }
-
-    if (!portal.active && (currentTime - portal.lastSpawnTime > 5000)) {
-        portal.active = true;
-        portal.lastSpawnTime = currentTime; // Posodobimo čas zadnje aktivacije
+        portal.timer = currentTime;
     }
 }
-
 
 void checkPortalCollision(Player* player, Portal &portal, Uint32 currentTime) {
     if (!portal.active) return;
@@ -35,19 +28,40 @@ void checkPortalCollision(Player* player, Portal &portal, Uint32 currentTime) {
     SDL_Rect portalRect = { portal.x, portal.y, portal.size, portal.size };
 
     if (SDL_HasIntersection(&playerRect, &portalRect)) {
-        // Ko igralec stopi v portal, ga teleportiramo v areno
-        vAreni = true;  // Označimo, da je v areni
-        player->x = 500;  // Nova začetna lokacija v areni
-        player->y = 500;
-        initArena(arena, 450, 450, 300, 200);  // Postavimo areno nekam drugam
+        vAreni = true;
+        player->x = 400;  // Postavi igralca na sredino arene
+        player->y = 300;
+        
+        // Nastavi areno s črnim ozadjem in belimi stenami
+        arena.x = 100;
+        arena.y = 100;
+        arena.width = 600;
+        arena.height = 400;
     }
 }
 
+void drawArena(SDL_Renderer* renderer) {
+    // Črna podlaga arene
+    SDL_SetRenderDrawColor(renderer, 0, 0, 0, 255);
+    SDL_Rect arenaRect = { arena.x, arena.y, arena.width, arena.height };
+    SDL_RenderFillRect(renderer, &arenaRect);
+
+    // Bele stene arene
+    SDL_SetRenderDrawColor(renderer, 255, 255, 255, 255);
+    SDL_Rect topWall = { arena.x, arena.y, arena.width, 10 };
+    SDL_Rect bottomWall = { arena.x, arena.y + arena.height - 10, arena.width, 10 };
+    SDL_Rect leftWall = { arena.x, arena.y, 10, arena.height };
+    SDL_Rect rightWall = { arena.x + arena.width - 10, arena.y, 10, arena.height };
+    
+    SDL_RenderFillRect(renderer, &topWall);
+    SDL_RenderFillRect(renderer, &bottomWall);
+    SDL_RenderFillRect(renderer, &leftWall);
+    SDL_RenderFillRect(renderer, &rightWall);
+}
 
 void drawPortal(SDL_Renderer* renderer, Portal &portal, Uint32 currentTime) {
     if (!portal.active) return;
 
-    // Spreminjanje barve vsakih 300 ms, temelji na času portala
     int alpha = ((currentTime - portal.timer) / 300 % 2) ? 255 : 100;
 
     SDL_SetRenderDrawColor(renderer, 150, 0, 255, 255);
@@ -59,6 +73,23 @@ void drawPortal(SDL_Renderer* renderer, Portal &portal, Uint32 currentTime) {
 }
 
 void teleportPlayer(Player &player) {
-    player.x = 500;  // Nastavi na novo lokacijo (prilagodi po želji)
-    player.y = 500;
+    player.x = 400;
+    player.y = 300;
+}
+
+void renderGame(SDL_Renderer* renderer, Player* player, Portal &portal, Uint32 currentTime) {
+    SDL_SetRenderDrawColor(renderer, 0, 0, 255, 255);
+    SDL_RenderClear(renderer);
+    
+    if (vAreni) {
+        drawArena(renderer);
+    }
+    
+    drawPortal(renderer, portal, currentTime);
+    
+    SDL_SetRenderDrawColor(renderer, 255, 255, 0, 255);
+    SDL_Rect playerRect = { static_cast<int>(player->x), static_cast<int>(player->y), player->size, player->size };
+    SDL_RenderFillRect(renderer, &playerRect);
+    
+    SDL_RenderPresent(renderer);
 }
