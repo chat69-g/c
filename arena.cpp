@@ -1,36 +1,40 @@
 #include "arena.h"
 #include <SDL2/SDL.h>
 
-Arena arena;
+void drawArena(SDL_Renderer* renderer, const Arena& arena) {
+    // Nastavimo črno ozadje
+    SDL_SetRenderDrawColor(renderer, 0, 0, 0, 255);
+    SDL_RenderClear(renderer);
 
-void initArena(Arena &arena, int x, int y, int width, int height) {
-    arena.x = x;
-    arena.y = y;
-    arena.width = width;
-    arena.height = height;
-    arena.exitPortalActive = false;
-    arena.complete = false;
-    arena.exitActive = false;
-    arena.enemiesDefeated = 0;
-    arena.animalsRescued = 0;  // 🔹 Inicializacija rešenih živali
+    // Nastavimo sivo barvo za stene
+    SDL_SetRenderDrawColor(renderer, 128, 128, 128, 255);
+    
+    // Debelina zidov
+    int zid = 20;
+
+    // Zgornji zid
+    SDL_Rect zgoraj = {0, 0, arena.width, zid};
+    SDL_RenderFillRect(renderer, &zgoraj);
+
+    // Spodnji zid
+    SDL_Rect spodaj = {0, arena.height - zid, arena.width, zid};
+    SDL_RenderFillRect(renderer, &spodaj);
+
+    // Levi zid
+    SDL_Rect levo = {0, 0, zid, arena.height};
+    SDL_RenderFillRect(renderer, &levo);
+
+    // Desni zid
+    SDL_Rect desno = {arena.width - zid, 0, zid, arena.height};
+    SDL_RenderFillRect(renderer, &desno);
 }
 
-void drawArena(SDL_Renderer* renderer, const Arena &arena) {
-    SDL_Rect rect = { arena.x, arena.y, arena.width, arena.height };
-    SDL_SetRenderDrawColor(renderer, 255, 0, 0, 255);
-    SDL_RenderFillRect(renderer, &rect);
-}
-
-void updateArena(Arena &arena) {
-    if (arena.animalsRescued >= 3) {  // 🔹 Ko igralec reši 3 živali, se aktivira izhod
-        arena.exitActive = true;
-    }
-}
-
+// Preverimo, ali je igralec zadel zid
 void checkArenaCollision(Player &player, const Arena &arena) {
-    // Logika za preverjanje trkov igralca z areno
-}
+    int zid = 20;
 
-void rescueAnimal(Arena &arena) {
-    arena.animalsRescued++;
+    if (player.x < zid) player.x = zid;
+    if (player.y < zid) player.y = zid;
+    if (player.x + player.size > arena.width - zid) player.x = arena.width - zid - player.size;
+    if (player.y + player.size > arena.height - zid) player.y = arena.height - zid - player.size;
 }

@@ -13,10 +13,10 @@ struct Arena {
     int animalsRescued;
 };
 
-extern Arena arena;
 
 void initArena(Arena &arena, int x, int y, int width, int height);
-void drawArena(SDL_Renderer* renderer, const Arena &arena);
+void drawArena(SDL_Renderer* renderer, const Arena& arena);
+extern Arena arena; // Tukaj samo DEKLARACIJA
 void updateArena(Arena &arena);
 void checkArenaCollision(Player &player, const Arena &arena);
 void rescueAnimal(Arena &arena);

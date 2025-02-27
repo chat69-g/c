@@ -3,12 +3,13 @@
 #include <cmath>  // Potrebno za funkcijo round()
 #include "arena.h" 
 
+extern Player player;
 // Definiramo igralca s začetnimi vrednostmi:
 // x = 50, y = 50 (začetna pozicija)
 // size = 20 (velikost kvadrata)
 // speed = 2 (hitrost premikanja)
-Player player = {50, 50, 20, 1.2};
-bool vAreni = false; //Privzeto igralec ni v areni.
+
+
 
 // Spremenljivka za shranjevanje stanja tipkovnice
 const Uint8* keys = SDL_GetKeyboardState(NULL);
