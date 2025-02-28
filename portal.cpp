@@ -2,7 +2,7 @@
 #include <SDL2/SDL.h>
 #include "arena.h"
 extern Arena arena;
-
+bool vAreni = false; 
 void initPortal(Portal &portal, int x, int y) {
     portal.x = x;
     portal.y = y;

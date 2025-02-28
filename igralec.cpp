@@ -1,54 +1,61 @@
-#include "igralec.h"  // Vključimo naš header file, ki vsebuje deklaracije za igralca
-#include <SDL2/SDL.h>  // Vključimo SDL knjižnico za grafiko in vhodne dogodke
-#include <cmath>  // Potrebno za funkcijo round()
-#include "arena.h" 
+#include "igralec.h"
+#include <cmath>
+#include "arena.h"
 
-extern Player player;
-// Definiramo igralca s začetnimi vrednostmi:
-// x = 50, y = 50 (začetna pozicija)
-// size = 20 (velikost kvadrata)
-// speed = 2 (hitrost premikanja)
-
-
-
-// Spremenljivka za shranjevanje stanja tipkovnice
+Player player = {50, 50, 20, 1.2};
 const Uint8* keys = SDL_GetKeyboardState(NULL);
 
-// Funkcija za obdelavo vhodnih dogodkov (npr. tipkovnice)
-void handleInput() {
-    SDL_PumpEvents();  // Osveži stanje vhodnih naprav (npr. tipkovnice in miške)
+void initPlayer(Player* player, int startX, int startY) {
+    player->x = startX;
+    player->y = startY;
+    player->size = 20;
+    player->speed = 1.2;
 }
 
-// Funkcija za posodobitev položaja igralca glede na pritiskane tipke
 void updatePlayer() {
-    static Uint32 lastTime = SDL_GetTicks();
-    Uint32 currentTime = SDL_GetTicks();
-    float deltaTime = (currentTime - lastTime) / 1000.0f;
-    lastTime = currentTime;
-
     const Uint8* keys = SDL_GetKeyboardState(NULL);
-    float moveAmount = player.speed * deltaTime * 100;
+    float moveAmount = player.speed * 16; // 16 ms kot okvirno trajanje enega cikla
 
     if (keys[SDL_SCANCODE_W] || keys[SDL_SCANCODE_UP]) player.y -= moveAmount;
     if (keys[SDL_SCANCODE_S] || keys[SDL_SCANCODE_DOWN]) player.y += moveAmount;
     if (keys[SDL_SCANCODE_A] || keys[SDL_SCANCODE_LEFT]) player.x -= moveAmount;
     if (keys[SDL_SCANCODE_D] || keys[SDL_SCANCODE_RIGHT]) player.x += moveAmount;
 
-    checkArenaCollision(player, arena);  // Preveri, če je igralec zadel steno
+    checkArenaCollision(player, arena);
 }
 
-
-// Funkcija za risanje igralca na zaslon
 void drawPlayer(SDL_Renderer* renderer) {
-    // Nastavimo barvo risanja (rdeča: 255, 0, 0, popolnoma neprosojna: 255)
     SDL_SetRenderDrawColor(renderer, 255, 0, 0, 255);
-    
-    // Ustvarimo pravokotnik na podlagi igralčevih koordinat in velikosti
     SDL_Rect rect = { static_cast<int>(round(player.x)), 
-        static_cast<int>(round(player.y)), 
-        player.size, 
-        player.size };
+                      static_cast<int>(round(player.y)), 
+                      player.size, player.size };
+    SDL_RenderFillRect(renderer, &rect);
+}
+
+// Funkcija za izračun premika izstrelka glede na kot
+void shootBullet(std::vector<Bullet>& bullets, const Player& player, float targetX, float targetY) {
+    Bullet bullet;
+    bullet.x = player.x + player.size / 2;
+    bullet.y = player.y + player.size / 2;
+    bullet.speed = 5.0f;
+
+    float dx = targetX - bullet.x;
+    float dy = targetY - bullet.y;
+    float length = sqrt(dx * dx + dy * dy);
     
-    // Narišemo napolnjen pravokotnik (kvadrat) na zaslon
+    bullet.dx = (dx / length) * bullet.speed;
+    bullet.dy = (dy / length) * bullet.speed;
+
+    bullets.push_back(bullet);
+}
+
+void updateBullet(Bullet& bullet, Uint32 deltaTime) {
+    bullet.x += bullet.dx * (deltaTime / 16.0f);
+    bullet.y += bullet.dy * (deltaTime / 16.0f);
+}
+
+void drawBullet(SDL_Renderer* renderer, const Bullet& bullet) {
+    SDL_SetRenderDrawColor(renderer, 255, 255, 0, 255); // Rumeni izstrelek
+    SDL_Rect rect = { static_cast<int>(bullet.x), static_cast<int>(bullet.y), 5, 5 };
     SDL_RenderFillRect(renderer, &rect);
 }
