@@ -1,20 +1,23 @@
 #include "igralec.h"
 #include <cmath>
 #include "arena.h"
+#include <iostream>
 
-Player player = {50, 50, 20, 1.2};
+Player player = {400, 300, 20, 1.2};
 const Uint8* keys = SDL_GetKeyboardState(NULL);
 
-void initPlayer(Player* player, int startX, int startY) {
-    player->x = startX;
-    player->y = startY;
-    player->size = 20;
-    player->speed = 1.2;
+void initPlayer(Player* player, int x, int y) {
+    player->x = x;
+    player->y = y;
+    player->size = 30;
+    player->speed = 5;
 }
-
 void updatePlayer() {
     const Uint8* keys = SDL_GetKeyboardState(NULL);
     float moveAmount = player.speed * 16; // 16 ms kot okvirno trajanje enega cikla
+   
+    std::cout << "Player position: x=" << player.x << " y=" << player.y << std::endl;
+
 
     if (keys[SDL_SCANCODE_W] || keys[SDL_SCANCODE_UP]) player.y -= moveAmount;
     if (keys[SDL_SCANCODE_S] || keys[SDL_SCANCODE_DOWN]) player.y += moveAmount;
@@ -25,12 +28,14 @@ void updatePlayer() {
 }
 
 void drawPlayer(SDL_Renderer* renderer) {
-    SDL_SetRenderDrawColor(renderer, 255, 0, 0, 255);
-    SDL_Rect rect = { static_cast<int>(round(player.x)), 
-                      static_cast<int>(round(player.y)), 
-                      player.size, player.size };
+    SDL_SetRenderDrawColor(renderer, 0, 255, 0, 255);  // Zelena barva
+    SDL_Rect rect = { static_cast<int>(player.x), 
+                      static_cast<int>(player.y), 
+                      player.size, 
+                      player.size };
     SDL_RenderFillRect(renderer, &rect);
 }
+
 
 // Funkcija za izračun premika izstrelka glede na kot
 void shootBullet(std::vector<Bullet>& bullets, const Player& player, float targetX, float targetY) {

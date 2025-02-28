@@ -1,6 +1,4 @@
-#include <SDL2/SDL.h>
-#include <SDL2/SDL_image.h>
-#include <SDL2/SDL_ttf.h>
+
 #include <vector>
 #include <algorithm> // Dodano za remove_if
 #include "igralec.h"
@@ -88,6 +86,7 @@ int SDL_main(int argc, char* argv[]) {
 
         handleEvents();
         update(deltaTime);
+        updatePlayer();
         render();
 
         SDL_Delay(16); // Omejitev FPS na približno 60
