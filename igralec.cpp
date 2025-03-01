@@ -3,20 +3,21 @@
 #include "arena.h"
 #include <iostream>
 
-Player player = {400, 300, 30, 5}; // Uporabljamo pravilno velikost in hitrost
+Player player = {100, 100, 30, 170}; // Spawn player outside the arena
 
 void initPlayer(Player* player, int x, int y) {
     player->x = x;
     player->y = y;
     player->size = 30;
-    player->speed = 5;
+    player->speed = 170;
 }
 
 void updatePlayer(Player* player, Uint32 deltaTime) {
     SDL_PumpEvents(); // Osveži stanje tipkovnice
     const Uint8* keys = SDL_GetKeyboardState(NULL);
-    
-    float moveAmount = player->speed * (deltaTime / 16.0f); // Prilagojen premik
+
+    // Calculate movement amount based on deltaTime (convert to seconds)
+    float moveAmount = player->speed * (deltaTime / 1000.0f); // deltaTime is in milliseconds
     bool moved = false;
 
     if (keys[SDL_SCANCODE_W] || keys[SDL_SCANCODE_UP]) { player->y -= moveAmount; moved = true; }

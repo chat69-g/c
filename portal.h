@@ -10,6 +10,8 @@ struct Portal {
     bool aktiven;
 };
 
+extern bool vAreni; // Declare vAreni as extern
+
 void initPortal(Portal &portal, int x, int y);
 void updatePortal(Portal &portal, Uint32 currentTime);
 void drawPortal(SDL_Renderer* renderer, const Portal &portal, Uint32 currentTime);

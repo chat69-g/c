@@ -18,13 +18,14 @@ void updatePortal(Portal &portal, Uint32 currentTime) {
 void checkPortalCollision(Player* player, Portal &portal, Uint32 currentTime) {
     if (!portal.aktiven) return;
 
+    // Check collision between player and portal
     if (player->x < portal.x + portal.size &&
         player->x + player->size > portal.x &&
         player->y < portal.y + portal.size &&
         player->y + player->size > portal.y) {
         
-        vAreni = true;
-        portal.aktiven = false; // Portal izgine po uporabi
+        vAreni = true; // Player enters the arena
+        portal.aktiven = false; // Portal deactivates after use
     }
 }
 

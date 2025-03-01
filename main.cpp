@@ -1,18 +1,18 @@
-
+#include <iostream>
 #include <vector>
-#include <algorithm> // Dodano za remove_if
+#include <algorithm>
 #include "igralec.h"
 #include "arena.h"
-#include "portal.h"
+#include "portal.h" // Include portal.h to access vAreni
 #include "vrata.h"
 
 // Globalne spremenljivke
 bool running = true;
 SDL_Window* window = nullptr;
 SDL_Renderer* renderer = nullptr;
-Arena arena;
+Arena arena = {0, 0, 800, 600, false, false, false, 0, 0}; // Initialize arena
 Portal portal;
-std::vector<Bullet> bullets; // Seznam izstrelkov
+std::vector<Bullet> bullets;
 
 // Funkcija za obdelavo dogodkov (tipkovnica + miška)
 void handleEvents() {
@@ -54,10 +54,12 @@ void render() {
     SDL_SetRenderDrawColor(renderer, 0, 0, 0, 255);
     SDL_RenderClear(renderer);
 
-    drawArena(renderer, arena);
-    drawPortal(renderer, portal, SDL_GetTicks());
-    drawPlayer(renderer, &player);
+    if (vAreni) {
+        drawArena(renderer, arena); // Draw arena only if player is inside
+    }
 
+    drawPortal(renderer, portal, SDL_GetTicks()); // Always draw the portal
+    drawPlayer(renderer, &player); // Always draw the player
 
     for (const auto& bullet : bullets) {
         drawBullet(renderer, bullet);
@@ -76,8 +78,7 @@ int SDL_main(int argc, char* argv[]) {
     renderer = SDL_CreateRenderer(window, -1, SDL_RENDERER_ACCELERATED);
     if (!renderer) return 1;
 
-    initPlayer(&player, 100, 100);
-    initPortal(portal, 400, 300);
+    initPortal(portal, 400, 300); // Initialize portal inside the arena
 
     Uint32 lastTime = SDL_GetTicks();
     while (running) {
@@ -87,7 +88,6 @@ int SDL_main(int argc, char* argv[]) {
 
         handleEvents();
         update(deltaTime);
-        updatePlayer(&player, deltaTime);
         render();
 
         SDL_Delay(16); // Omejitev FPS na približno 60
