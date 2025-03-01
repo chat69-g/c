@@ -2,11 +2,11 @@
 #include <SDL2/SDL.h>
 
 void drawArena(SDL_Renderer* renderer, const Arena& arena) {
-    // Nastavimo črno ozadje
+    //črno ozadje
     SDL_SetRenderDrawColor(renderer, 0, 0, 0, 255);
     SDL_RenderClear(renderer);
 
-    // Nastavimo sivo barvo za stene
+    //siva barvo stene
     SDL_SetRenderDrawColor(renderer, 128, 128, 128, 255);
     
     // Debelina zidov
