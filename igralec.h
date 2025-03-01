@@ -10,7 +10,7 @@ struct Player {
     float speed;
 };
 
-extern Player player;
+extern Player player; // Globalna spremenljivka za igralca
 
 void initPlayer(Player* player, int x, int y);
 void updatePlayer(Player* player, Uint32 deltaTime);
@@ -21,7 +21,7 @@ struct Bullet {
     float dx, dy;
     float speed;
 
-    bool outOfBounds(int width, int height) const { // DODAN const
+    bool outOfBounds(int width, int height) const { // Preveri, ali je izstrelek zunaj zaslona
         return x < 0 || x > width || y < 0 || y > height;
     }
 };

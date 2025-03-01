@@ -4,7 +4,7 @@
 void initEnemy(Enemy& enemy, float x, float y, float speed) {
     enemy.x = x;
     enemy.y = y;
-    enemy.size = 20; // Size of the enemy
+    enemy.size = 20; // Velikost sovražnika
     enemy.speed = speed;
     enemy.active = true;
 }
@@ -12,25 +12,25 @@ void initEnemy(Enemy& enemy, float x, float y, float speed) {
 void updateEnemy(Enemy& enemy, const Player& player, Uint32 deltaTime) {
     if (!enemy.active) return;
 
-    // Calculate direction toward the player
+    // Izračun smeri proti igralcu
     float dx = player.x - enemy.x;
     float dy = player.y - enemy.y;
     float distance = std::sqrt(dx * dx + dy * dy);
 
-    // Normalize direction
+    // Normalizacija smeri
     if (distance > 0) {
         dx /= distance;
         dy /= distance;
     }
 
-    // Move enemy toward the player
+    // Premik sovražnika proti igralcu
     enemy.x += dx * enemy.speed * (deltaTime / 1000.0f);
     enemy.y += dy * enemy.speed * (deltaTime / 1000.0f);
 }
 
 void drawEnemy(SDL_Renderer* renderer, const Enemy& enemy) {
     if (!enemy.active) return;
-    SDL_SetRenderDrawColor(renderer, 255, 0, 0, 255); // Red color for enemies
+    SDL_SetRenderDrawColor(renderer, 255, 0, 0, 255); // Rdeča barva za sovražnike
     SDL_Rect rect = { static_cast<int>(enemy.x), static_cast<int>(enemy.y), enemy.size, enemy.size };
     SDL_RenderFillRect(renderer, &rect);
 }
@@ -45,7 +45,7 @@ bool checkPlayerEnemyCollision(const Player& player, const Enemy& enemy) {
 void initBull(Bull& bull, float x, float y, float speed) {
     bull.x = x;
     bull.y = y;
-    bull.size = 30; // Size of the bull
+    bull.size = 30; // Velikost bika
     bull.speed = speed;
     bull.active = true;
 }
@@ -66,7 +66,7 @@ void updateBull(Bull& bull, Uint32 deltaTime) {
 
 void drawBull(SDL_Renderer* renderer, const Bull& bull) {
     if (!bull.active) return;
-    SDL_SetRenderDrawColor(renderer, 139, 69, 19, 255); // Brown color for the bull
+    SDL_SetRenderDrawColor(renderer, 139, 69, 19, 255); // Rjava barva za bika
     SDL_Rect rect = { static_cast<int>(bull.x), static_cast<int>(bull.y), bull.size, bull.size };
     SDL_RenderFillRect(renderer, &rect);
 }

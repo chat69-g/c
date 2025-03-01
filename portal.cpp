@@ -3,6 +3,7 @@
 #include "arena.h"
 extern Arena arena;
 bool vAreni = false; 
+
 void initPortal(Portal &portal, int x, int y) {
     portal.x = x;
     portal.y = y;
@@ -18,14 +19,14 @@ void updatePortal(Portal &portal, Uint32 currentTime) {
 void checkPortalCollision(Player* player, Portal &portal, Uint32 currentTime) {
     if (!portal.aktiven) return;
 
-    // Check collision between player and portal
+    // Preveri trk med igralcem in portalom
     if (player->x < portal.x + portal.size &&
         player->x + player->size > portal.x &&
         player->y < portal.y + portal.size &&
         player->y + player->size > portal.y) {
         
-        vAreni = true; // Player enters the arena
-        portal.aktiven = false; // Portal deactivates after use
+        vAreni = true; // Igralec vstopi v areno
+        portal.aktiven = false; // Portal se izklopi po uporabi
     }
 }
 
@@ -56,7 +57,7 @@ void drawPortal(SDL_Renderer* renderer, const Portal& portal, Uint32 currentTime
     int centerY = static_cast<int>(portal.y);
     int radius = portal.size / 2;
 
-    // **Utripajoča vijolična notranjost**
+    // Utripajoča vijolična notranjost
     int pulse = (SDL_GetTicks() / 100) % 256; // Spreminja vrednost od 0 do 255
     SDL_SetRenderDrawColor(renderer, 128, 0, 128, pulse); // Vijolična z utripanjem
     for (int w = 0; w < radius - 2; w++) { // Narišemo manjši krog z vijolično
@@ -70,7 +71,7 @@ void drawPortal(SDL_Renderer* renderer, const Portal& portal, Uint32 currentTime
         }
     }
 
-    // **Bela obroba**
+    // Bela obroba
     SDL_SetRenderDrawColor(renderer, 255, 255, 255, 255);
     for (int w = 0; w < radius; w++) {
         for (int h = 0; h < radius; h++) {
@@ -83,7 +84,6 @@ void drawPortal(SDL_Renderer* renderer, const Portal& portal, Uint32 currentTime
         }
     }
 }
-
 
 void teleportPlayer(Player &player) {
     player.x = 400;

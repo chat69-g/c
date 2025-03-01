@@ -3,7 +3,7 @@
 #include "arena.h"
 #include <iostream>
 
-Player player = {100, 100, 30, 170}; // Spawn player outside the arena
+Player player = {100, 100, 30, 170}; // Inicializacija igralca z začetno pozicijo in hitrostjo
 
 void initPlayer(Player* player, int x, int y) {
     player->x = x;
@@ -16,10 +16,11 @@ void updatePlayer(Player* player, Uint32 deltaTime) {
     SDL_PumpEvents(); // Osveži stanje tipkovnice
     const Uint8* keys = SDL_GetKeyboardState(NULL);
 
-    // Calculate movement amount based on deltaTime (convert to seconds)
-    float moveAmount = player->speed * (deltaTime / 1000.0f); // deltaTime is in milliseconds
+    // Izračun premika glede na deltaTime (pretvorba v sekunde)
+    float moveAmount = player->speed * (deltaTime / 1000.0f); // deltaTime je v milisekundah
     bool moved = false;
 
+    // Premikanje igralca glede na pritisnjene tipke
     if (keys[SDL_SCANCODE_W] || keys[SDL_SCANCODE_UP]) { player->y -= moveAmount; moved = true; }
     if (keys[SDL_SCANCODE_S] || keys[SDL_SCANCODE_DOWN]) { player->y += moveAmount; moved = true; }
     if (keys[SDL_SCANCODE_A] || keys[SDL_SCANCODE_LEFT]) { player->x -= moveAmount; moved = true; }
@@ -27,16 +28,15 @@ void updatePlayer(Player* player, Uint32 deltaTime) {
 
     if (moved) {
         std::cout << "Player position: x=" << player->x << " y=" << player->y << std::endl;
-        checkArenaCollision(*player, arena);
+        checkArenaCollision(*player, arena); // Preveri trke z zidovi arene
     }
 }
 
 void drawPlayer(SDL_Renderer* renderer, Player* player) {
-    SDL_SetRenderDrawColor(renderer, 0, 255, 0, 255);  // Zelena barva
+    SDL_SetRenderDrawColor(renderer, 0, 255, 0, 255);  // Zelena barva za igralca
     SDL_Rect rect = { static_cast<int>(player->x), static_cast<int>(player->y), player->size, player->size };
     SDL_RenderFillRect(renderer, &rect);
 }
-
 
 // Funkcija za izračun premika izstrelka glede na kot
 void shootBullet(std::vector<Bullet>& bullets, const Player& player, float targetX, float targetY) {
@@ -45,6 +45,7 @@ void shootBullet(std::vector<Bullet>& bullets, const Player& player, float targe
     bullet.y = player.y + player.size / 2;
     bullet.speed = 5.0f;
 
+    // Izračun smeri izstrelka
     float dx = targetX - bullet.x;
     float dy = targetY - bullet.y;
     float length = sqrt(dx * dx + dy * dy);
@@ -52,11 +53,11 @@ void shootBullet(std::vector<Bullet>& bullets, const Player& player, float targe
     bullet.dx = (dx / length) * bullet.speed;
     bullet.dy = (dy / length) * bullet.speed;
 
-    bullets.push_back(bullet);
+    bullets.push_back(bullet); // Dodaj izstrelek v seznam
 }
 
 void updateBullet(Bullet& bullet, Uint32 deltaTime) {
-    bullet.x += bullet.dx * (deltaTime / 16.0f);
+    bullet.x += bullet.dx * (deltaTime / 16.0f); // Posodobi pozicijo izstrelka
     bullet.y += bullet.dy * (deltaTime / 16.0f);
 }
 

@@ -10,7 +10,7 @@ struct Portal {
     bool aktiven;
 };
 
-extern bool vAreni; // Declare vAreni as extern
+extern bool vAreni; // Deklaracija globalne spremenljivke vAreni
 
 void initPortal(Portal &portal, int x, int y);
 void updatePortal(Portal &portal, Uint32 currentTime);

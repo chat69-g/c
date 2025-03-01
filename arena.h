@@ -13,7 +13,6 @@ struct Arena {
     int animalsRescued;
 };
 
-
 void initArena(Arena &arena, int x, int y, int width, int height);
 void drawArena(SDL_Renderer* renderer, const Arena& arena);
 extern Arena arena; // Tukaj samo DEKLARACIJA
