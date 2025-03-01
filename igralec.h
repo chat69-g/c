@@ -12,9 +12,9 @@ struct Player {
 
 extern Player player;
 
-void initPlayer(Player* player, int startX, int startY);
-void updatePlayer();
-void drawPlayer(SDL_Renderer* renderer);
+void initPlayer(Player* player, int x, int y);
+void updatePlayer(Player* player, Uint32 deltaTime);
+void drawPlayer(SDL_Renderer* renderer, Player* player);
 
 struct Bullet {
     float x, y;

@@ -36,7 +36,7 @@ void handleEvents() {
 
 // Posodobitev igre
 void update(Uint32 deltaTime) {
-    updatePlayer();
+    updatePlayer(&player, deltaTime);
     checkPortalCollision(&player, portal, SDL_GetTicks());
 
     // Posodobi izstrelke
@@ -56,7 +56,8 @@ void render() {
 
     drawArena(renderer, arena);
     drawPortal(renderer, portal, SDL_GetTicks());
-    drawPlayer(renderer);
+    drawPlayer(renderer, &player);
+
 
     for (const auto& bullet : bullets) {
         drawBullet(renderer, bullet);
@@ -86,7 +87,7 @@ int SDL_main(int argc, char* argv[]) {
 
         handleEvents();
         update(deltaTime);
-        updatePlayer();
+        updatePlayer(&player, deltaTime);
         render();
 
         SDL_Delay(16); // Omejitev FPS na približno 60

@@ -3,8 +3,7 @@
 #include "arena.h"
 #include <iostream>
 
-Player player = {400, 300, 20, 1.2};
-const Uint8* keys = SDL_GetKeyboardState(NULL);
+Player player = {400, 300, 30, 5}; // Uporabljamo pravilno velikost in hitrost
 
 void initPlayer(Player* player, int x, int y) {
     player->x = x;
@@ -12,27 +11,28 @@ void initPlayer(Player* player, int x, int y) {
     player->size = 30;
     player->speed = 5;
 }
-void updatePlayer() {
+
+void updatePlayer(Player* player, Uint32 deltaTime) {
+    SDL_PumpEvents(); // Osveži stanje tipkovnice
     const Uint8* keys = SDL_GetKeyboardState(NULL);
-    float moveAmount = player.speed * 16; // 16 ms kot okvirno trajanje enega cikla
-   
-    std::cout << "Player position: x=" << player.x << " y=" << player.y << std::endl;
+    
+    float moveAmount = player->speed * (deltaTime / 16.0f); // Prilagojen premik
+    bool moved = false;
 
+    if (keys[SDL_SCANCODE_W] || keys[SDL_SCANCODE_UP]) { player->y -= moveAmount; moved = true; }
+    if (keys[SDL_SCANCODE_S] || keys[SDL_SCANCODE_DOWN]) { player->y += moveAmount; moved = true; }
+    if (keys[SDL_SCANCODE_A] || keys[SDL_SCANCODE_LEFT]) { player->x -= moveAmount; moved = true; }
+    if (keys[SDL_SCANCODE_D] || keys[SDL_SCANCODE_RIGHT]) { player->x += moveAmount; moved = true; }
 
-    if (keys[SDL_SCANCODE_W] || keys[SDL_SCANCODE_UP]) player.y -= moveAmount;
-    if (keys[SDL_SCANCODE_S] || keys[SDL_SCANCODE_DOWN]) player.y += moveAmount;
-    if (keys[SDL_SCANCODE_A] || keys[SDL_SCANCODE_LEFT]) player.x -= moveAmount;
-    if (keys[SDL_SCANCODE_D] || keys[SDL_SCANCODE_RIGHT]) player.x += moveAmount;
-
-    checkArenaCollision(player, arena);
+    if (moved) {
+        std::cout << "Player position: x=" << player->x << " y=" << player->y << std::endl;
+        checkArenaCollision(*player, arena);
+    }
 }
 
-void drawPlayer(SDL_Renderer* renderer) {
+void drawPlayer(SDL_Renderer* renderer, Player* player) {
     SDL_SetRenderDrawColor(renderer, 0, 255, 0, 255);  // Zelena barva
-    SDL_Rect rect = { static_cast<int>(player.x), 
-                      static_cast<int>(player.y), 
-                      player.size, 
-                      player.size };
+    SDL_Rect rect = { static_cast<int>(player->x), static_cast<int>(player->y), player->size, player->size };
     SDL_RenderFillRect(renderer, &rect);
 }
 
