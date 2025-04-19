@@ -3,7 +3,7 @@
 #include "arena.h"
 #include <iostream>
 
-Player player = {100, 100, 30, 170}; // Inicializacija igralca z začetno pozicijo in hitrostjo
+Player player = {100, 100, 30, 170}; //zacetna vrednost
 
 void initPlayer(Player* player, int x, int y) {
     player->x = x;
@@ -13,10 +13,10 @@ void initPlayer(Player* player, int x, int y) {
 }
 
 void updatePlayer(Player* player, Uint32 deltaTime) {
-    SDL_PumpEvents(); // Osveži stanje tipkovnice
+    SDL_PumpEvents(); // Osvez i stanje tipkovnice
     const Uint8* keys = SDL_GetKeyboardState(NULL);
 
-    // Izračun premika glede na deltaTime (pretvorba v sekunde)
+    
     float moveAmount = player->speed * (deltaTime / 1000.0f); // deltaTime je v milisekundah
     bool moved = false;
 
@@ -33,7 +33,7 @@ void updatePlayer(Player* player, Uint32 deltaTime) {
 }
 
 void drawPlayer(SDL_Renderer* renderer, Player* player) {
-    SDL_SetRenderDrawColor(renderer, 0, 255, 0, 255);  // Zelena barva za igralca
+    SDL_SetRenderDrawColor(renderer, 0, 255, 0, 255);  // Zelena barva 
     SDL_Rect rect = { static_cast<int>(player->x), static_cast<int>(player->y), player->size, player->size };
     SDL_RenderFillRect(renderer, &rect);
 }
@@ -57,7 +57,7 @@ void shootBullet(std::vector<Bullet>& bullets, const Player& player, float targe
 }
 
 void updateBullet(Bullet& bullet, Uint32 deltaTime) {
-    bullet.x += bullet.dx * (deltaTime / 16.0f); // Posodobi pozicijo izstrelka
+    bullet.x += bullet.dx * (deltaTime / 16.0f); 
     bullet.y += bullet.dy * (deltaTime / 16.0f);
 }
 

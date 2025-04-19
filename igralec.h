@@ -21,7 +21,7 @@ struct Bullet {
     float dx, dy;
     float speed;
 
-    bool outOfBounds(int width, int height) const { // Preveri, ali je izstrelek zunaj zaslona
+    bool izvenObmočja(int width, int height) const { // Preveri, ali je izstrelek zunaj zaslona
         return x < 0 || x > width || y < 0 || y > height;
     }
 };

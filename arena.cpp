@@ -29,13 +29,17 @@ void drawArena(SDL_Renderer* renderer, const Arena& arena) {
     SDL_RenderFillRect(renderer, &desno);
 }
 
-// Preverimo, ali je igralec zadel zid
+// igralec je zadel zil
 void checkArenaCollision(Player &player, const Arena &arena) {
     int zid = 20;
 
-    // Preprečimo igralcu, da zapusti areno
-    if (player.x < zid) player.x = zid;
-    if (player.y < zid) player.y = zid;
-    if (player.x + player.size > arena.width - zid) player.x = arena.width - zid - player.size;
-    if (player.y + player.size > arena.height - zid) player.y = arena.height - zid - player.size;
+    // premikamo igralca nazaj v areno
+    if (player.x < zid)
+     player.x = zid;
+    if (player.y < zid)
+     player.y = zid;
+    if (player.x + player.size > arena.width - zid)
+     player.x = arena.width - zid - player.size;
+    if (player.y + player.size > arena.height - zid)
+     player.y = arena.height - zid - player.size;
 }

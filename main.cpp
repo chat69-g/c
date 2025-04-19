@@ -3,7 +3,7 @@
 #include <algorithm>
 #include "igralec.h"
 #include "arena.h"
-#include "portal.h" // Vključimo portal.h za dostop do vAreni
+#include "portal.h" 
 #include "neprijatelji.h"
 
 // Globalne spremenljivke
@@ -15,9 +15,9 @@ Portal portal;
 std::vector<Bullet> bullets;
 std::vector<Enemy> enemies; // Seznam sovražnikov
 Bull bull; // Objekt za bika
-bool enemiesInitialized = false; // Flag za inicializacijo sovražnikov in bika
+bool enemiesTrue = false; // inicializacija sovražnikov in bika
 
-// Funkcija za obdelavo dogodkov (tipkovnica + miška)
+//  (tipkovnica + miška)
 void handleEvents() {
     SDL_Event event;
     while (SDL_PollEvent(&event)) {
@@ -37,7 +37,7 @@ void handleEvents() {
     }
 }
 
-// Preveri, ali so vsi sovražniki mrtvi
+
 bool allEnemiesDead() {
     for (const auto& enemy : enemies) {
         if (enemy.active) {
@@ -53,17 +53,17 @@ void update(Uint32 deltaTime) {
     checkPortalCollision(&player, portal, SDL_GetTicks()); // Preveri trk s portalom
 
     // Inicializacija sovražnikov in bika, ko igralec vstopi v areno
-    if (vAreni && !enemiesInitialized) {
+    if (vAreni && !enemiesTrue) {
         for (int i = 0; i < 5; ++i) { // Dodaj 5 sovražnikov
             Enemy enemy;
             initEnemy(enemy, rand() % 800, rand() % 600, 50.0f); // Naključne pozicije, hitrost = 50
             enemies.push_back(enemy);
         }
         initBull(bull, rand() % 800, rand() % 600, 30.0f); // Inicializacija bika na naključni poziciji
-        enemiesInitialized = true; // Označi, da so sovražniki in bik inicializirani
+        enemiesTrue = true; // Označi, da so sovražniki in bik inicializirani
     }
 
-    // Posodobi izstrelke
+    //izstrelki ubdejt
     for (auto& bullet : bullets) {
         updateBullet(bullet, deltaTime);
     }
@@ -80,7 +80,7 @@ void update(Uint32 deltaTime) {
                 return true; // Odstrani izstrelek
             }
         }
-        return bullet.outOfBounds(800, 600); // Odstrani izstrelek, če je zunaj zaslona
+        return bullet.izvenObmočja(800, 600); // Odstrani izstrelek, če je zunaj zaslona
     }), bullets.end());
 
     // Posodobi sovražnike (samo, če je igralec v areni)
@@ -92,7 +92,7 @@ void update(Uint32 deltaTime) {
                 // Preveri trk med igralcem in sovražnikom
                 if (checkPlayerEnemyCollision(player, enemy)) {
                     running = false; // Konec igre, če se sovražnik dotakne igralca
-                    std::cout << "Izgubil si! Sovražnik te je dotaknil." << std::endl;
+                    std::cout << "Izgubil si! Sovraznik te je dotaknil." << std::endl;
                 }
             }
         }
@@ -110,10 +110,10 @@ void update(Uint32 deltaTime) {
                 if (allEnemiesDead()) {
                     // Rešitev bika (konec igre ali naslednji nivo)
                     running = false; // Za zdaj samo končamo igro
-                    std::cout << "Bik rešen! Konec igre." << std::endl;
+                    std::cout << "Bik resen! Konec igre." << std::endl;
                 } else {
                     // Igralec še ni ubil vseh sovražnikov
-                    std::cout << "Najprej ubij vse sovražnike!" << std::endl;
+                    std::cout << "Najprej ubij vse sovraznike!" << std::endl;
                 }
             }
         }
@@ -176,7 +176,7 @@ int SDL_main(int argc, char* argv[]) {
         update(deltaTime); // Posodobi stanje igre
         render(); // Nariši stanje igre
 
-        SDL_Delay(16); // Omejitev FPS na približno 60
+        SDL_Delay(16); 
     }
 
     SDL_DestroyRenderer(renderer);

@@ -11,9 +11,6 @@ void initPortal(Portal &portal, int x, int y) {
     portal.aktiven = true; // Portal je na začetku vklopljen
 }
 
-void updatePortal(Portal &portal, Uint32 currentTime) {
-    // Lahko dodamo utripanje portala ali animacijo tukaj
-}
 
 // Preveri, ali igralec vstopi v portal
 void checkPortalCollision(Player* player, Portal &portal, Uint32 currentTime) {
@@ -57,7 +54,7 @@ void drawPortal(SDL_Renderer* renderer, const Portal& portal, Uint32 currentTime
     int centerY = static_cast<int>(portal.y);
     int radius = portal.size / 2;
 
-    // Utripajoča vijolična notranjost
+    //  vijolična notranjost
     int pulse = (SDL_GetTicks() / 100) % 256; // Spreminja vrednost od 0 do 255
     SDL_SetRenderDrawColor(renderer, 128, 0, 128, pulse); // Vijolična z utripanjem
     for (int w = 0; w < radius - 2; w++) { // Narišemo manjši krog z vijolično
